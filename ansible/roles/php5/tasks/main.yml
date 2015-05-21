@@ -1,0 +1,53 @@
+- name: Install php5
+  sudo: yes
+  apt: pkg=php5 state=latest
+
+- name: ensure timezone is set in apache2 php.ini
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='date.timezone ='
+              line='date.timezone = {{ timezone }}'
+
+- name: ensure short open tags are on
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='short_open_tag ='
+              line='short_open_tag = On'
+
+- name: ensure display_errors is on
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='display_errors ='
+              line='display_errors = On'
+
+- name: ensure auto_start is off
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='flag session.auto_start ='
+              line='flag session.auto_start = off'
+
+
+- name: ensure auto_start is off
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='zlib.output_compression ='
+              line='zlib.output_compression = on'
+
+- name: ensure magic_quotes_gpc is off
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='magic_quotes_gpc ='
+              line='magic_quotes_gpc = off'
+
+- name: ensure magic_quotes_gpc is off
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='extension=mcrypt.so'
+              line='extension=mcrypt.so'
+
+- name: ensure magic_quotes_gpc is off
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='suhosin.session.cryptua ='
+              line='suhosin.session.cryptua = off'
+
+- name: ensure mysql socket is set (that bloody thing!)
+  lineinfile: dest=/etc/php5/apache2/php.ini
+              regexp='pdo_mysql.default_socket='
+              line='pdo_mysql.default_socket=/var/run/mysqld/mysqld.sock'
+
+
+
+

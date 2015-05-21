@@ -1,0 +1,5 @@
+mysql:
+    root_password: 
+    user: magentouser
+    password: magentopass
+    database: magento
