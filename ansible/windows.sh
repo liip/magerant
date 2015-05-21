@@ -42,10 +42,11 @@ sudo ansible-playbook /vagrant/ansible/playbook.yml -e hostname=$1 --connection=
 
 # Download and extract
 if [[ ! -f "/vagrant/index.php" ]]; then
-  cd /vagrant/httpdocs
+  echo "Download Magento files"
+  cd /vagrant
   wget http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
   tar -zxvf magento-${MAGE_VERSION}.tar.gz
-  mv magento/* magento/.htaccess .
+  mv magento/* ./ .htaccess .
   chmod -R o+w media var
   chmod o+w app/etc
   # Clean up downloaded file and extracted dir
