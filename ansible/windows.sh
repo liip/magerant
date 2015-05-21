@@ -45,12 +45,14 @@ if [[ ! -f "/vagrant/index.php" ]]; then
   echo "Download Magento files"
   cd /vagrant
   wget http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
-  tar -zxvf magento-${MAGE_VERSION}.tar.gz
-  mv magento/* ./ .htaccess .
-  chmod -R o+w media var
-  chmod o+w app/etc
+  sudo tar -zxvf magento-${MAGE_VERSION}.tar.gz
+  sudo shopt -s dotglob
+  sudo mv magento/* ./
+  sudo mv magento/.htaccess ./
+  sudo chmod -R o+w media var
+  sudo chmod o+w app/etc
   # Clean up downloaded file and extracted dir
-  rm -rf magento*
+  sudo rm -rf magento*
 fi
 
 # Sample Data
