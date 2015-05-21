@@ -112,9 +112,9 @@ if [[ $SAMPLE_DATA == "true" ]]; then
   sudo cp -R magento-sample-data-${DATA_VERSION}/media/* media/
   sudo cp -R magento-sample-data-${DATA_VERSION}/skin/*  skin/
   echo "drop database"
-  sudo mysql -u root --execute="drop database magento;" #todo make a variable out of the databasename
+  sudo mysql -u root -e "drop database magento;" #todo make a variable out of the databasename
   echo "create database"
-  sudo mysql -u root --execute="create database magento;" #todo make a variable out of the databasename
+  sudo mysql -u root -e "create database magento;" #todo make a variable out of the databasename
   echo "upload database"
   sudo mysql -u root  magento < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql; #todo make a variable out of the databasename
   exit
