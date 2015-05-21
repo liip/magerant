@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SAMPLE_DATA="false"
+SAMPLE_DATA="true"
 MAGE_VERSION="1.9.1.0"
 DATA_VERSION="1.9.0.0"
 
@@ -55,30 +55,13 @@ if [[ ! -f "/vagrant/index.php" ]]; then
   sudo rm -rf magento*
 fi
 
-# Sample Data
-if [[ $SAMPLE_DATA == "true" ]]; then
-  echo "install sample data"
-  cd /vagrant
-
-  if [[ ! -f "/vagrant/magento-sample-data-${DATA_VERSION}.tar.gz" ]]; then
-    # Only download sample data if we need to
-    wget http://www.magentocommerce.com/downloads/assets/${DATA_VERSION}/magento-sample-data-${DATA_VERSION}.tar.gz
-  fi
-
-  tar -zxvf magento-sample-data-${DATA_VERSION}.tar.gz
-  cp -R magento-sample-data-${DATA_VERSION}/media/* media/
-  cp -R magento-sample-data-${DATA_VERSION}/skin/*  skin/
-  mysql -u root magento < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql #todo make a variable out of the databasename
-  rm -rf magento-sample-data-${DATA_VERSION}
-fi
-
-echo "chmod folders"
-cd /vagrant
-sudo chmod -R 777 ./var
-sudo chmod -R 777 ./media
-sudo chmod -R 777 ./app/etc
-sudo chmod -R 755 ./var/session
-sudo chmod -R 755 /var/lib/php5/sessions
+    echo "chmod folders"
+    cd /vagrant
+    sudo chmod -R 777 ./var
+    sudo chmod -R 777 ./media
+    sudo chmod -R 777 ./app/etc
+    sudo chmod -R 755 ./var/session
+    sudo chmod -R 755 /var/lib/php5/sessions
 
 # Run installer
 if [ ! -f "/vagrant/app/etc/local.xml" ]; then
@@ -110,6 +93,36 @@ sudo php -f install.php -- \
 
   /usr/bin/php -f shell/indexer.php reindexall
 fi
+
+
+
+
+# Sample Data
+if [[ $SAMPLE_DATA == "true" ]]; then
+  echo "install sample data"
+  cd /vagrant
+
+  if [[ ! -f "/vagrant/magento-sample-data-${DATA_VERSION}.tar.gz" ]]; then
+    # Only download sample data if we need to
+    wget http://www.magentocommerce.com/downloads/assets/${DATA_VERSION}/magento-sample-data-${DATA_VERSION}.tar.gz
+  fi
+  echo "unzip sample data"
+
+  sudo tar -zxvf magento-sample-data-${DATA_VERSION}.tar.gz
+  sudo cp -R magento-sample-data-${DATA_VERSION}/media/* media/
+  sudo cp -R magento-sample-data-${DATA_VERSION}/skin/*  skin/
+  echo "drop database"
+  sudo mysql -u root --execute="drop database magento;" #todo make a variable out of the databasename
+  echo "create database"
+  sudo mysql -u root --execute="create database magento;" #todo make a variable out of the databasename
+  echo "upload database"
+  sudo mysql -u root  magento < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql; #todo make a variable out of the databasename
+  exit
+  sudo rm -rf magento-sample-data-${DATA_VERSION}
+  echo "finished installing sample data"
+fi
+
+
 
 # Install n98-magerun
 # --------------------
