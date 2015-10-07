@@ -57,11 +57,11 @@ fi
 
     echo "chmod folders"
     cd /vagrant
-    sudo chmod -R 777 ./var
-    sudo chmod -R 777 ./media
-    sudo chmod -R 777 ./app/etc
-    sudo chmod -R 755 ./var/session
-    sudo chmod -R 755 /var/lib/php5/sessions
+    sudo chmod -R -f 777 ./var
+    sudo chmod -R -f 777 ./media
+    sudo chmod -R -f 777 ./app/etc
+    sudo chmod -R -f 755 ./var/session
+    sudo chmod -R -f 755 /var/lib/php5/sessions
 
 # Run installer
 if [ ! -f "/vagrant/app/etc/local.xml" ]; then
