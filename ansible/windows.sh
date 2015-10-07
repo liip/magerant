@@ -134,7 +134,7 @@ fi
 #    sudo mv ./n98-magerun.phar /usr/local/bin/
 #    echo "done install n98-magerun"
 
-fi
+#fi
 
 echo "Changing cache directory for magento in local.xml"
 cd /vagrant
