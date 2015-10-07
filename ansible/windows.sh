@@ -126,13 +126,13 @@ fi
 
 # Install n98-magerun
 # --------------------
-if [ ! -f "/usr/local/bin/n98-magerun.phar" ]; then
-    echo "install n98-magerun"
-    cd /vagrant
-    wget https://raw.github.com/netz98/n98-magerun/master/n98-magerun.phar
-    chmod +x ./n98-magerun.phar
-    sudo mv ./n98-magerun.phar /usr/local/bin/
-    echo "done install n98-magerun"
+#if [ ! -f "/usr/local/bin/n98-magerun.phar" ]; then
+#    echo "install n98-magerun"
+#    cd /vagrant
+#    wget https://raw.github.com/netz98/n98-magerun/master/n98-magerun.phar
+#    chmod +x ./n98-magerun.phar
+#    sudo mv ./n98-magerun.phar /usr/local/bin/
+#    echo "done install n98-magerun"
 
 fi
 
