@@ -89,7 +89,7 @@ sudo php -f install.php -- \
 --admin_username "admin" \
 --admin_password "l11padmin" \
 --skip_url_validation "yes" \
---session_save_path "/tmp" #this line doesen't work
+--session-save "db" 
 
   /usr/bin/php -f shell/indexer.php reindexall
 fi
