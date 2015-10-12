@@ -3,7 +3,6 @@
   sudo: true
   vars:
     web_server: apachephp
-    servername: magento.dev www.magento.dev 192.168.33.99
     timezone: Europe/Zurich
   vars_files:
     - vars/mysql.yml
