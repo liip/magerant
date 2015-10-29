@@ -1,4 +1,25 @@
 #!/usr/bin/env bash
+echo $1
+
+echo -n "please define admin username (default: admin)"
+read username
+echo -n "please define admin password (default: admin)"
+read password
+echo -n "please define admin firstname (default: admin)"
+read firstname
+echo -n "please define admin lastname (default: user)"
+read lastname
+echo -n "please define admin e-mail (default: admin@$1)"
+echo -n "please define locale (default en_US)"
+read locale
+echo -n "please define timezone (default: Europe/Zurich)"
+read timezone
+
+[ -z $timezone ] &&  timezone="Europe/Zurich"
+echo $timezone
+
+
+
 
 SAMPLE_DATA="false"
 MAGE_VERSION="1.9.1.0"
@@ -32,7 +53,7 @@ sudo apt-get install -y ansible
 cp /vagrant/ansible/inventories/dev /etc/ansible/hosts -f
 chmod 666 /etc/ansible/hosts
 cat /vagrant/ansible/files/authorized_keys >> /home/vagrant/.ssh/authorized_keys
-sudo ansible-playbook /vagrant/ansible/playbook.yml -e hostname=$1 --connection=local
+sudo ansible-playbook  /vagrant/ansible/playbook.yml  -e hostname=$1 --connection=local
 
 
 
@@ -49,19 +70,13 @@ if [[ ! -f "/vagrant/index.php" ]]; then
   sudo shopt -s dotglob
   sudo mv magento/* ./
   sudo mv magento/.htaccess ./
-  sudo chmod -R o+w media var
-  sudo chmod o+w app/etc
+  #sudo chmod -R o+w media var
+  #sudo chmod o+w app/etc
   # Clean up downloaded file and extracted dir
   sudo rm -rf magento*
 fi
 
-    echo "chmod folders"
-    cd /vagrant
-    sudo chmod -R -f 777 ./var
-    sudo chmod -R -f 777 ./media
-    sudo chmod -R -f 777 ./app/etc
-    sudo chmod -R -f 755 ./var/session
-    sudo chmod -R -f 755 /var/lib/php5/sessions
+
 
 # Run installer
 if [ ! -f "/vagrant/app/etc/local.xml" ]; then
@@ -78,8 +93,8 @@ sudo php -f install.php -- \
 --db_name "magento" \
 --db_user "magentouser" \
 --db_pass "magentopass" \
---url "http://magento.dev/" \
---use_rewrites "yes" \
+--url $1 \
+--use_rewrites "" \
 --use_secure "no" \
 --secure_base_url "" \
 --use_secure_admin "no" \
@@ -145,7 +160,7 @@ echo "done changin cache directory"
 echo ""
 echo "###############"
 echo ""
-echo "Make sure to have '192.168.33.99  magento.dev' in your hosts file or install vagrant-hostmaster:"
+echo "Make sure to have '$1' in your hosts file or install vagrant-hostmaster:"
 echo ""
 echo "$ vagrant gem install vagrant-hostmaster"
 echo ""
