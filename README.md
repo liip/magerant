@@ -60,22 +60,21 @@ SSH Pass: vagrant
 
 It is not nescessary to change the configuration until you have several Vagrant VM's running at the same time with the same configuration. I recommend not to change the configurations for the first provision of the Vagrantmachine.
 
-But if you are convinced you can handle the pain, there are a few configurations you have to take a look at:
+But if you are convinced you can handle it, there are a few configurations you have to take a look at:
 
 ### Vagrantfile
 
-
-Also check the variable "hostname", this will be the url your project will be accessible via http
+Check the variable "hostname", this will be the url your project will be accessible via http
 
 ### ansible/vars/mysql.yml
 
 Here you can set DB name, user and password.
 
-### ansible/windows.sh
+### ansible/init.sh
 
 Define if you want to install <b>sample Data</b> or not: SAMPLE_DATA="false"
 Define the magento version to install if not already present: MAGE_VERSION="1.9.1.0"
 Define the version of the sample data to install: DATA_VERSION="1.9.0.0"
 
-Please check the lines after "sudo php -f install.php". Here, you have to set passwords and URL for your project. Please make sure, the database config is the same as in "mysql.yml". Also, you can set a admin user and password.
+Please check the lines after "sudo php -f install.php". Here, you have to set passwords and URL for your Magento project. Please make sure, the database config is the same as in "mysql.yml". Also, you can set a admin user and password.
 

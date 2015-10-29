@@ -1,25 +1,4 @@
 #!/usr/bin/env bash
-echo $1
-
-echo -n "please define admin username (default: admin)"
-read username
-echo -n "please define admin password (default: admin)"
-read password
-echo -n "please define admin firstname (default: admin)"
-read firstname
-echo -n "please define admin lastname (default: user)"
-read lastname
-echo -n "please define admin e-mail (default: admin@$1)"
-echo -n "please define locale (default en_US)"
-read locale
-echo -n "please define timezone (default: Europe/Zurich)"
-read timezone
-
-[ -z $timezone ] &&  timezone="Europe/Zurich"
-echo $timezone
-
-
-
 
 SAMPLE_DATA="false"
 MAGE_VERSION="1.9.1.0"
