@@ -70,8 +70,8 @@ if [[ ! -f "/vagrant/index.php" ]]; then
   sudo shopt -s dotglob
   sudo mv magento/* ./
   sudo mv magento/.htaccess ./
-  sudo chmod -R o+w media var
-  sudo chmod o+w app/etc
+  #sudo chmod -R o+w media var
+  #sudo chmod o+w app/etc
   # Clean up downloaded file and extracted dir
   sudo rm -rf magento*
 fi
@@ -87,7 +87,7 @@ if [ ! -f "/vagrant/app/etc/local.xml" ]; then
 sudo php -f install.php -- \
 --license_agreement_accepted "yes" \
 --locale "en_US" \
---timezone $timezone \
+--timezone "Europe/Zurich" \
 --default_currency "CHF" \
 --db_host "localhost" \
 --db_name "magento" \
