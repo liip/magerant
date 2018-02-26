@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-SAMPLE_DATA="false"
-MAGE_VERSION="1.9.1.0"
-DATA_VERSION="1.9.0.0"
+SAMPLE_DATA="true"
 
 # Update Repositories
 sudo apt-get update
@@ -14,7 +12,7 @@ sudo apt-get update
 #
 # USE_COMMON=1 when using a distribution over 12.04
 # USE_COMMON=0 when using a distribution at 12.04 or older
-USE_COMMON=$(echo "$DISTRIB_RELEASE > 12.04" | bc)
+USE_COMMON=$(echo "$DISTRIB_RELEASE >= 12.04" | bc)
 
 if [ "$USE_COMMON" -eq "1" ];
 then
@@ -23,16 +21,24 @@ else
     sudo apt-get install -y python-software-properties
 fi
 
+
+sudo apt-get install build-essential libssl-dev libffi-dev python3-dev
+
 # Add Ansible Repository & Install Ansible
 sudo add-apt-repository -y ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get install -y ansible
+
+# Add git
+sudo apt-get install -y git
 
 # Setup Ansible for Local Use and Run
 cp /vagrant/ansible/inventories/dev /etc/ansible/hosts -f
 chmod 666 /etc/ansible/hosts
 cat /vagrant/ansible/files/authorized_keys >> /home/vagrant/.ssh/authorized_keys
 sudo ansible-playbook  /vagrant/ansible/playbook.yml  -e hostname=$1 --connection=local
+sudo php5enmod mcrypt
+sudo php5enmod pdo
 
 
 
@@ -44,15 +50,17 @@ sudo ansible-playbook  /vagrant/ansible/playbook.yml  -e hostname=$1 --connectio
 if [[ ! -f "/vagrant/index.php" ]]; then
   echo "Download Magento files"
   cd /vagrant
-  wget http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
-  sudo tar -zxvf magento-${MAGE_VERSION}.tar.gz
-  sudo shopt -s dotglob
-  sudo mv magento/* ./
-  sudo mv magento/.htaccess ./
+  git clone https://github.com/psavary/magento-1.9.3.7.git
+  cd magento-1.9.3.7
+  sudo tar -zxvf magento-1.9.3.7-2017-11-27-05-32-35.tar.gz
+  #sudo shopt -s dotglob
+  sudo mv magento/* ../
+  sudo mv magento/.htaccess ../
   #sudo chmod -R o+w media var
   #sudo chmod o+w app/etc
   # Clean up downloaded file and extracted dir
-  sudo rm -rf magento*
+  cd ..
+  sudo rm -rf magento-1.9.3.7
 fi
 
 
@@ -73,9 +81,9 @@ sudo php -f install.php -- \
 --db_user "magentouser" \
 --db_pass "magentopass" \
 --url $1 \
---use_rewrites "" \
+--use_rewrites "no" \
 --use_secure "no" \
---secure_base_url "" \
+--secure_base_url $1 \
 --use_secure_admin "no" \
 --admin_firstname "Philippe" \
 --admin_lastname "Savary" \
@@ -96,23 +104,28 @@ if [[ $SAMPLE_DATA == "true" ]]; then
   echo "install sample data"
   cd /vagrant
 
-  if [[ ! -f "/vagrant/magento-sample-data-${DATA_VERSION}.tar.gz" ]]; then
+
+  if [ ! -d "/vagrant/magento-sample-data-1.9.2.4" ] && [! -f "/vagrant/magento-sample-data-1.9.2.4/partaa"]; then
     # Only download sample data if we need to
-    wget http://www.magentocommerce.com/downloads/assets/${DATA_VERSION}/magento-sample-data-${DATA_VERSION}.tar.gz
+    git clone https://github.com/psavary/magento-sample-data-1.9.2.4.git
+    cd magento-sample-data-1.9.2.4
+    bash sampledata.sh
+    cd ..
   fi
   echo "unzip sample data"
-
-  sudo tar -zxvf magento-sample-data-${DATA_VERSION}.tar.gz
-  sudo cp -R magento-sample-data-${DATA_VERSION}/media/* media/
-  sudo cp -R magento-sample-data-${DATA_VERSION}/skin/*  skin/
+  cd magento-sample-data-1.9.2.4
+  sudo tar -zxvf magento-sample-data-1.9.2.4.tar.gz
+  sudo cp -R magento-sample-data-1.9.2.4/media/* ../media/
+  sudo cp -R magento-sample-data-1.9.2.4/skin/*  ../skin/
+  cd ..
   echo "drop database"
   sudo mysql -u root -e "drop database magento;" #todo make a variable out of the databasename
   echo "create database"
   sudo mysql -u root -e "create database magento;" #todo make a variable out of the databasename
   echo "upload database"
-  sudo mysql -u root  magento < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql; #todo make a variable out of the databasename
+  sudo mysql -u root  magento < magento-sample-data-1.9.2.4/magento-sample-data-1.9.2.4/magento_sample_data_for_1.9.2.4.sql; #todo make a variable out of the databasename
   exit
-  sudo rm -rf magento-sample-data-${DATA_VERSION}
+  sudo rm -rf magento-sample-data-1.9.2.4
   echo "finished installing sample data"
 fi
 

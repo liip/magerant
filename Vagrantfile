@@ -45,8 +45,9 @@ Vagrant.configure("2") do |config|
         ]
     end
 
-    config.vm.box = "precise64"
-    config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = "ubuntu/trusty64"
+    config.vm.box_version = "20180212.0.1"
+
 
     config.vm.network :private_network, type: "dhcp"
     config.vm.host_name = hostname
@@ -57,7 +58,7 @@ Vagrant.configure("2") do |config|
     # Ansible provisioning
     #############################################################
 
-    config.vm.provision :shell, path: "ansible/init.sh", args: [hostname]
+    config.vm.provision :shell, path: "ansible/init.sh", args: hostname
 
 
     #############################################################

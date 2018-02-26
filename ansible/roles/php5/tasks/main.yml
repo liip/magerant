@@ -48,6 +48,11 @@
               regexp='pdo_mysql.default_socket='
               line='pdo_mysql.default_socket=/var/run/mysqld/mysqld.sock'
 
+- name: enable pdo in mysql cli
+  lineinfile: dest=/etc/php5/cli/php.ini
+              regexp='pdo_mysql.default_socket='
+              line='pdo_mysql.default_socket=/var/run/mysqld/mysqld.sock'
+
 
 
 

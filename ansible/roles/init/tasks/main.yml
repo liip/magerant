@@ -10,19 +10,20 @@
     - curl
     - wget
     - python-software-properties
-
-- name: Add ppa Repository
-  sudo: yes
-  apt_repository: repo=ppa:ondrej/{{ php_ppa }}
+    - php5-cli
+    - php5-curl
+    - php5-fpm
+    - php5-intl
+    - php5-json
+    - php5-mcrypt
+    - php5-xdebug
+    - php5-mysql
+    - php5-gd
+    - libapache2-mod-php5
 
 - name: Update apt
   sudo: yes
   apt: update_cache=yes
-
-- name: Install Extra Packages
-  sudo: yes
-  apt: pkg={{ item }} state=latest
-  with_items: sys_packages
 
 - name: Configure the timezone
   sudo: yes
