@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SAMPLE_DATA="true"
+SAMPLE_DATA="false"
 
 # Update Repositories
 sudo apt-get update
@@ -63,7 +63,35 @@ if [[ ! -f "/vagrant/index.php" ]]; then
   sudo rm -rf magento-1.9.3.7
 fi
 
+# Sample Data
+if [[ $SAMPLE_DATA == "true" ]]; then
+  echo "install sample data"
+  cd /vagrant
 
+
+  if [ ! -d "/vagrant/magento-sample-data-1.9.2.4" ] && [! -f "/vagrant/magento-sample-data-1.9.2.4/partaa"]; then
+    # Only download sample data if we need to
+    git clone https://github.com/psavary/magento-sample-data-1.9.2.4.git
+    cd magento-sample-data-1.9.2.4
+    bash sampledata.sh
+    cd ..
+  fi
+  echo "unzip sample data"
+  cd magento-sample-data-1.9.2.4
+  sudo tar -zxvf magento-sample-data-1.9.2.4.tar.gz
+  sudo cp -R magento-sample-data-1.9.2.4/media/* ../media/
+  sudo cp -R magento-sample-data-1.9.2.4/skin/*  ../skin/
+  cd ..
+  ##echo "drop database"
+  ##sudo mysql -u root -e "drop database magento;" #todo make a variable out of the databasename
+  ##echo "create database"
+  ##sudo mysql -u root -e "create database magento;" #todo make a variable out of the databasename
+  echo "upload database"
+  sudo mysql -u root  magento < magento-sample-data-1.9.2.4/magento-sample-data-1.9.2.4/magento_sample_data_for_1.9.2.4.sql; #todo make a variable out of the databasename
+  exit
+  sudo rm -rf magento-sample-data-1.9.2.4
+  echo "finished installing sample data"
+fi
 
 # Run installer
 if [ ! -f "/vagrant/app/etc/local.xml" ]; then
@@ -91,45 +119,10 @@ sudo php -f install.php -- \
 --admin_username "admin" \
 --admin_password "l11padmin" \
 --skip_url_validation "yes" \
---session-save "db" 
+--session-save "db"
 
   /usr/bin/php -f shell/indexer.php reindexall
 fi
-
-
-
-
-# Sample Data
-if [[ $SAMPLE_DATA == "true" ]]; then
-  echo "install sample data"
-  cd /vagrant
-
-
-  if [ ! -d "/vagrant/magento-sample-data-1.9.2.4" ] && [! -f "/vagrant/magento-sample-data-1.9.2.4/partaa"]; then
-    # Only download sample data if we need to
-    git clone https://github.com/psavary/magento-sample-data-1.9.2.4.git
-    cd magento-sample-data-1.9.2.4
-    bash sampledata.sh
-    cd ..
-  fi
-  echo "unzip sample data"
-  cd magento-sample-data-1.9.2.4
-  sudo tar -zxvf magento-sample-data-1.9.2.4.tar.gz
-  sudo cp -R magento-sample-data-1.9.2.4/media/* ../media/
-  sudo cp -R magento-sample-data-1.9.2.4/skin/*  ../skin/
-  cd ..
-  echo "drop database"
-  sudo mysql -u root -e "drop database magento;" #todo make a variable out of the databasename
-  echo "create database"
-  sudo mysql -u root -e "create database magento;" #todo make a variable out of the databasename
-  echo "upload database"
-  sudo mysql -u root  magento < magento-sample-data-1.9.2.4/magento-sample-data-1.9.2.4/magento_sample_data_for_1.9.2.4.sql; #todo make a variable out of the databasename
-  exit
-  sudo rm -rf magento-sample-data-1.9.2.4
-  echo "finished installing sample data"
-fi
-
-
 
 # Install n98-magerun
 # --------------------
